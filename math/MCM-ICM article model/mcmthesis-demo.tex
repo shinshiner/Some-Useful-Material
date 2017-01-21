@@ -1,0 +1,950 @@
+%%
+%% This is file `mcmthesis-demo.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% mcmthesis.dtx  (with options: `demo')
+%%
+%% -----------------------------------
+%%
+%% This is a generated file.
+%%
+%% Copyright (C)
+%%     2010 -- 2015 by Zhaoli Wang
+%%     2014 -- 2016 by Liam Huang
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is Liam Huang.
+%%
+\documentclass{mcmthesis}
+\mcmsetup{CTeX = false,   % 使用 CTeX 套装时，设置为 true
+        tcn = 41175, problem = D,
+        sheet = true, titleinsheet = true, keywordsinsheet = true,
+        titlepage = true}
+\usepackage{palatino}
+\usepackage{mwe}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{indentfirst}
+\usepackage{gensymb}
+\usepackage[ruled,lined,commentsnumbered]{algorithm2e}
+
+
+\begin{document}
+\title{Optimizing the Passenger Throughput at an Airport Security Checkpoint}
+
+\date{\today}
+	\begin{abstract}
+		
+		Today's astronautic operation is facing a serious collision threat caused by thousands of space debris fragments orbiting the Earth. In order to make the space environment safer for future aerospace activities, numbers of methods are proposed to remove the space debris. In this paper, we, a private company, aiming to proceed with the space debris removal task and explore a commercial opportunity in it, designed a General Assessment Model on Alternatives of Space Debris Removal in Low Earth Orbit (GAM-LEO) to address this problem.
+		
+		For purpose of simplifying the complex problem context, we constrained the size and distribution range of space debris.  We also limited the problem space within four levels: aerospace, technical, economic, legal and political.
+		
+		In GAM-LEO we not only conducted quantitative and qualitative analysis of risk, cost, income sources on space debris removal methods of Ground-based Laser, Collection Media Sweeping Out Volume in space (CMSOV), Electrodynamic Tether, Inflatables and Solar Sail, but also assessed economic potentials of combinations of these methods. With official data we got, using GAM-LEO, for each input methods we determined its benefits then finally made a decision on whether it is a commercial opportunity.
+		
+		After the modeling and assessment, we figured out that the combination of CMSOV and Electrodynamic Tether makes the highest potential profit, thus we recommend it to be the prior option in space debris removal.
+		
+		At last we analyzed the sensitivity of our GAM-LEO model. Result turns out that GAM-LEO is sensitive to flux changes, showing that the benefits will increase sharply with the decrease of flux, which means that, there are indeed opportunities to excavate wealth from the space debris.
+		
+		\begin{keywords}
+			space debris removal; commercial analysis; aerospace operation
+		\end{keywords}
+	\end{abstract}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+	
+\subsection{Context of the Problem}
+	
+\subsubsection{Space Debris Definition}
+	
+	Space debris, also referred as space junk, is becoming an increasingly larger problem for spacecraft operators, due to the launching of more and more satellites of mankind. Predictive studies show that if humans do not take action to control the space debris population, an increasing number of unintentional collisions between orbiting objects will lead to the runaway growth of space debris in Earth's orbit~\cite{Liou}. This uncontrolled growth of space debris threatens the ability of satellites to deliver the services humanity has come to rely on in its day-to-day activities. For example, Global Positioning System (GPS) precision timing and navigation signals are a significant component of the modern global economy; a GPS failure could disrupt emergency response services, cripple global banking systems, and interrupt electric power grids~\cite{Logsdon}. In 2009, NASA alone conducted nine in-orbit maneuvers to avoid potential collisions between its satellites and pieces of space debris~\cite{Megan}.
+	
+	Space debris is basically all space objects non-functional and human made, that include fragmentation debris (42\%)--break ups of satellite, unused fuel, dead batteries, rocket bodies (17\%), mission-related debris (19\%), non-functional spacecrafts (22\%). Only 6\% of their catalogued orbital population represents operational satellites, while 38\% can be attributed to decommissioned satellites, spent upper stages and mission-related objects (launch adaptors, lens covers, etc.). The remaining 56\% originates from more than 200 in-orbit fragmentations which have been recorded since 1961~\cite{Karishma}. Fragmentation debris is the largest source of space debris. Three countries in particular are responsible for roughly 95 percent of the fragmentation debris currently in Earth's orbit: China (42 percent), the United States (27.5 percent), and Russia (25.5 percent). Although this distribution of responsibility suggests that these countries should contribute more to cleaning up the near-Earth space environment than others, the fact that many nations will benefit from remediation results in a classic free rider problem that complicates the situation~\cite{Megan}.
+	
+	%	\begin{figure}[h]
+	%	  	\centering
+	%	  	\begin{minipage}{0.4\linewidth}
+	%	  		\begin{figure}[H]
+	%	  			\includegraphics[width=\linewidth]{LEO1280.jpg}
+	%	  			\caption{Low Earth Orbit View}
+	%	  			\label{Fig-LEO}
+	%	  		\end{figure}
+	%	  	\end{minipage}
+	%	  	\hspace{0.05\linewidth}
+	%	  	\begin{minipage}{0.5\linewidth}
+	%	  		\begin{figure}[H]
+	%	  			\includegraphics[width=\linewidth]{GEO1280.jpg}
+	%	  			\caption{Geosynchronous View}
+	%	  			\label{Fig-GEO}
+	%	  		\end{figure}
+	%	  	\end{minipage}
+	%	\end{figure}
+	
+\subsubsection{Space Debris Distribution} \label{SubSec-DebriDistribution}
+	
+	In order to describe the distribution and attributes of space debris, we first divide the space environment into three regions: Low Earth Orbit (LEO), Medium Earth Orbit (MEO) and Geostationary Orbit (GEO). Their corresponding altitude ranges are listed in Table~\ref{Tab-LEO-MEO-GEO}. And thanks to the work of NASA~\cite{NASA_fig_1}, we are able to get the distribution graphs of space debris in LEO (Figure~\ref{Fig-LEO}) and GEO (Figure~\ref{Fig-GEO}).
+	
+	\begin{table}[htbp]
+		\centering
+		\caption{Altitude Classifications for Geocentric Orbits~\cite{Wiki_orbits}} \label{Tab-LEO-MEO-GEO}
+		\begin{tabular}{cl}
+			\hline
+			Region & Altitude Range\\
+			\hline
+			\hline
+			Low Earth Orbit (LEO) & 0-2000 km \\
+			Medium Earth Orbit (MEO) & 2000-35786 km\\
+			Geostationary Orbit (GEO) & 35786-42164 km\\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Fig-LEO1280.jpg}
+		\caption{LEO Distribution of Space Debris}
+		\label{Fig-LEO}
+	\end{figure}
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.85\linewidth]{Fig-GEO1280.jpg}
+		\caption{GEO Distribution of Space Debris}
+		\label{Fig-GEO}
+	\end{figure}
+	
+	In describing space debris, there are some important distinctions that need to be made from the outset. \emph{Total debris} must be distinguished from \emph{tracked debris} and \emph{catalogued debris}. The US tracks objects in space with radar and optical sensors in the Space Surveillance Network (SSN). The SSN can track objects in LEO that are larger than 5-10 cm in size and objects in GEO larger than 1 m in size. Debris tracked by the SSN is known as \emph{tracked debris}. The US also keeps a catalogue of space objects that, currently, contains approximately 16,000 objects. There are a large number of objects that are tracked. However, because they are of unknown origin, they are not catalogued. As such, the number of tracked objects is larger than the number of catalogued objects. Also, the total amount of debris is much larger than the number of tracked and catalogued objects~\cite{Jakhu}.
+	
+\subsubsection{Space Debris Classification}\label{Sec-DebrisClassification}
+	
+	More specifically, debris may also be classified according to the size. In that regard, three size categories of debris are commonly used (as shown in Table~\ref{Tab-DebrisClassification}).
+	
+	\begin{table}[htbp]
+		\centering
+		\caption{Size Categories of Space Debris~\cite{Jakhu}}
+		\begin{tabular}{cll}
+			\hline
+			Physical Size &  Comments & Potential Risk to Satellites\\
+			\hline
+			\hline
+			\multirow{2}{*}{>10 cm} & Can be tracked & \multirow{2}{*}{Complete destruction}\\
+			& No effective shielding & \\
+			\hline
+			\multirow{2}{*}{1-10 cm} & Smaller objects are hard to be tracked & Severe damage or \\
+			& No effective shielding & complete destruction\\
+			\hline
+			\multirow{2}{*}{<1 cm} & Cannot be tracked & \multirow{2}{*}{Damage}\\
+			& Effective shielding exists & \\
+			\hline
+		\end{tabular}
+		\label{Tab-DebrisClassification}
+	\end{table}
+	
+\subsubsection{Difficulties in Space Debris Removal}
+	
+	There are two ways to reduce space debris: mitigation and removal. Mitigation refers to reducing the creation of new debris, while removal refers to either natural removal by atmospheric drag or active removal by human-made systems. Efforts to reduce space debris have focused on mitigation rather than removal. Although mitigation is important, studies show it will be insufficient	to stabilize the long-term space debris environment. In this century, increasing collisions between space objects will create debris faster than it is removed naturally by atmospheric drag (Liou and Johnson 2006). Yet, no active space debris removal systems currently exist and there have been no serious attempts to develop them in the past~\cite{Megan}.
+	
+	Several methods have been implemented to remove the debris, including space-based water jets and high energy lasers used to target specific pieces of debris. However, the debris' high velocity orbits make capture difficult.
+	
+	At the same time, implementing Active Debris Removal (ADR) systems poses not only difficult technical challenges, but also many political ones. The global nature of space activities implies that these systems should entail some form of international cooperation. However, international cooperation in space has rarely resulted in cost-effective or expedient solutions, especially in areas of uncertain technological feasibility. Further, it will be difficult to quickly deploy these systems before the space environment destabilizes. Problems will also arise in dividing the anticipated high costs, as a small number of countries are responsible for the large majority of the space debris population, yet all nations will benefit from its removal~\cite{Megan}.
+	
+\subsection{The Task at Hand}\label{Sec-Task}
+	
+	Facing the challenges and difficulties of space debris removal, our team, as a private firm, aims to develop a time-dependent model to determine the best alternative or combination of alternatives as a commercial opportunity to address the space debris problem.
+	
+	These aspects should be included:
+	\begin{itemize}
+		\item Quantitative and/or qualitative estimates of costs, risks, benefits, etc.
+		\item Assessment on independent alternatives as well as combinations of alternatives.
+		\item Exploration in a variety of important "What if?" scenarios.
+		\item Whether an economically attractive opportunity exists or not.
+		\item If such opportunity exists, provide a comparison of the different options for removing debris, and include a specific recommendation as to how the debris should be removed.
+		\item If no such opportunity, provide innovative alternatives for avoiding collisions.
+	\end{itemize}
+	
+\subsection{Previous Work}
+	
+	In 1978,  Donald J. Kessler and Burton Cour-Palais concluded that by about 2000, space debris would outpace micrometeoroids as the primary ablative risk to orbiting spacecraft~\cite{Kessler}. At that time, it was believed that drag from the upper atmosphere would de-orbit faster than it was created. However, John Gabbard was aware that the number and type of objects in space were under-represented in the NORAD data and was familiar with its behavior, and he coined the term \emph{Kessler syndrome} to refer to the accumulation of debris~\cite{Wiki_debris}.
+	
+	In 1991, Kessler published "Collisional cascading: The limits of population growth in low Earth orbit" with the best data then available. Citing the USAF conclusions about debris creation of debris, he wrote that although almost all debris objects (such as paint flecks) were lightweight, most of its mass was in debris about 1 kg (2.2 lb) or heavier. This mass could destroy a spacecraft on impact, creating more debris in the critical-mass area~\cite{Wiki_debris}.
+	
+	Additionally, certain measures have been taken to address the issue of space debris since then. National Aeronautics and Space Administration (NASA) developed the world's first set of space debris mitigation guidelines in 1995. The Inter-Agency Space Debris Coordination Committee (IADC) serves as the leading international space debris forum; its mitigation guidelines (IADC 2002) were adopted by the United Nations Committee on the Peaceful Uses of Outer Space (COPUOS) and the General Assembly in 2007 and 2008, respectively. In December, 2009, the first-ever International Conference on Orbital Debris Removal, was held and co-hosted by NASA and Defense Advanced Research Projects Agency (DARPA), illustrated this growing concern~\cite{Megan}.
+	
+	\subsection{The NASA Orbital Debris Engineering Model ORDEM2000}
+	
+	ORDEM2000 is a simulation software developed by NASA, which can be installed on a desktop PC. The main function of ORDEM2000 is to compute the cumulative flux for debris with various sizes, or impact velocities, etc., given a year and a calculation mode.
+	
+	The model describes the orbital debris environment in the low Earth orbit region between 200 and 2000 km altitude. The model is appropriate for those engineering solutions requiring knowledge and estimates of the orbital debris environment (debris spatial density, flux, etc.). ORDEM2000 can also be used as a benchmark for ground-based debris measurements and observations~\cite{ORDEM}.
+	
+	Utilizing ORDEM2000 seems to be convenient for our modeling, since we are able to save the time of constructing debris orbiting environment. However, due to the specific requirement about commercial space debris removal, ORDEM2000 is too integrated to add on new attributes. On the other side, ideas about debris flux onto spacecraft surfaces inspired our development of the model.
+
+\subsection{Paper Organization}
+
+The rest of our paper is organized as follows: In Section~\ref{Sec-Design} we introduce our design of the assessment model. In Section~\ref{Sec-RemovelScheme} we discuss the space debris removal schemes and methods. In Section~\ref{Sec-Comparison} we use our model to test the two schemes for orbital debris removal. Section~\ref{Sec-Sensitivity} evaluates our model and provides sensitivity analysis. Finally, Section~\ref{Sec-Conclusion} concludes the paper.
+
+
+\section{Our Design of the Assessment Model} \label{Sec-Design}
+\subsection{Modeling Objectives}
+	In order to develop a time-dependent model through which we are able to assess the best alternative or combination alternatives that bring a commercial opportunity during the removal of space debris, there are three objectives for us to follow:
+	
+	\begin{itemize}
+		\item The model should simulate a Space Debris Orbiting Environment (SDOE) which accord with the real situation.
+		\item Given an alternative solution, the model should determine the effect the solution has on SODE.
+		\item There should be a criterion applied to all the alternative solutions, so that comparisons among alternative solutions are possible.
+	\end{itemize}
+	
+	Besides, as mentioned above, the role we are playing is a private firm, which means that our goals include not only effective methods in ADR, but potential chances in profits.
+	
+\subsection{Problem Space Analysis}\label{Sec-ProblemSpace}
+	
+	Speaking of ADR, it is a huge project involving engineering, astrophysics, aerospace theory, material, management and assessment, even politics. To execute an ADR, it	is important to first identify the threat(s), determine the time available to react, plan the access for minimum energy, rendezvous and establish the orbit modification device, plan the orbit modification to ensure that the risk is less than that of the original circumstance, and execute the mission with extreme vigilance. The following are some of the essential prerequisites for the conduct of active debris removal~\cite{Jakhu}.
+	
+\subsubsection{Essential Prerequisites}
+	\begin{itemize}
+		\item A ``cost effective" technique.
+		\item A proper legal and policy framework to protect the parties involved.
+		\item Someone to Pay.
+		\item Accurate tracking and necessary assistance during operations.
+		\item Capability to locate, approach, connect de-orbit device, control orientation and to move the target object to desired destination.
+		\item Safety of the public on ground, at sea and traveling by air.
+	\end{itemize}
+	
+	However, due to the limitation of the competition time, it is impossible to go through all the aspects above. We determine some limitations and boundaries about several levels of problem space.
+	
+\subsubsection{Aerospace Level}
+	
+	From Section~\ref{SubSec-DebriDistribution}, we can see that the GEO orbit has not been discussed much since the current collision hazard in GEO is much smaller than in the	LEO environment~\cite{McKnight}. Moreover, most of the space debris concentrates between orbital altitudes from 500 km to 1500 km~\cite{Zhang}. Another argument could advocate for a LEO focus in the cleaning of space junk: LEO is a much closer orbit, so it could be easier and cheaper to operate there~\cite{Oliver}. Thus, we limit our modeling problem space to LEO region.
+	
+	Besides, currently it is estimated that, the total amount of debris in LEO measuring between 1 and 10 cm is around 400000, whereas total debris in LEO measuring more than 10 cm in size is around 14000~\cite{Jakhu}. Considering the fatality mentioned in Section~\ref{Sec-DebrisClassification} and difficulty level of removal of different sizes of debris, we mainly focus on small debris and large debris in LEO.
+	
+\subsubsection{Technical Level}
+	
+	Removing debris from LEO to ensure the security for future space activities is a task which mainly involves ADR techniques. For LEO ADR, there are several mature techniques: Space-based Magnetic Field Generator, Sweeping/Retarding Surface, Ground-/Air-/Space-based Laser, Drag Augmentation Device, Magnetic Sail, Momentum Tethers, Electrodynamic Tether, Capture/Orbital Transfer Vehicle (Space Shutter), etc~\cite{Zhang}.
+	
+	Among those technologies, we consider Ground-based Laser, Collection Media Sweeping Out Volume in Space, Electrodynamic Tether, Grapple and Tug, Inflatables, and Solar Sail as our candidate space debris removal methods.
+	
+	
+\subsubsection{Economic Level}
+	
+	As a commercial company, we need to employ techniques to measure the opportunities in which ADR can make a fortune. Despite the removal cost that 2000 tons of large debris and 97\% of the debris-generation potential can be removed at an average cost under \$400 per kg and an average	annual cost of \$84 M~\cite{Pearson}, there are still ways a company could do business in the field of ADR services, we conclude some of the methods as following:
+	
+	\begin{enumerate}
+		\item The Removal of Decaying Space Objects. States or companies would be interested in cleaning the space environment for the safety of their own satellite emissions~\cite{Oliver}.
+		\item Damage inspection services. Companies or space agencies could be willing to pay to get information on the damage status of their spacecraft~\cite{Oliver}.
+		\item Material Recycling. It creates a novel opportunity to collect spent stages and selectively salvage their accessible aluminum alloys and other materials. This could generate a supply of up to 100 tons per year of metals~\cite{Pearson}.
+		\item Space insurance reduction. When the collision risk reaches a value of 1.5\% per year, insurance premiums will likely increase. However, once a collision with an insured satellite occurs, the urgency for starting active debris removal options will also likely accelerate~\cite{McKnight}.
+		\item Orbital Debris Removal and Recycling Fund (ODRRF). The Space Frontier Foundation presented ODRRF at the International Conference on Orbital Debris Removal. The objective was to stimulate the private sector and to give incentives for the development of a comprehensive system for conducting active space debris removal operations. The incentives of an ODRRF, set up by launching states and private operators, lie in creating lower insurance costs for commercial satellite operators, coupled with a decreased probability of collision~\cite{Lehnert}.
+	\end{enumerate}
+	
+	In our model, we take recycle, funding, and payment into consideration.
+	
+\subsubsection{Legal \& Political Level}
+	
+	Removing a space object usually brings legal issues. First and foremost, there is no adopted legal definition of what space debris actually is. For the time being existing definitions, provided by the International Academy of Astronautics (IAA), the Inter-Agency Space Debris Coordination Committee (IADC) and the UNCOPUOS, try to depict the population and nature of a great variety of space debris objects. These non-binding definitions make the situation very vague and leave room for launching states to debate if certain types of objects constitute space debris or not. This situation is particularly crucial when it comes to collisions and to the question of what	objects should be removed, considering that the	state that launched the object which caused damages is liable~\cite{Lehnert}.
+	
+	Another major concern is the similarities between space debris removal system and space weapons. As the decades-long debate has failed to even produce a clear definition of the term, it will be nearly impossible to actively remove space debris without the use of devices that could be classified in some way as potential space weapons. Thus, openness and transparency will be an important element in the development, deployment, and operation of any space debris removal system so that it is not seen as a covert ASAT weapon~\cite{Megan}.
+	
+	Since it is a complex topic on legal and political level to be addressed in this paper, we exclude this level in our design of model.
+	
+\subsection{Notations}
+	Here we list the symbols and notations used in this paper, as shown in Table~\ref{Tab-Notations}. Some of them will be defined later in the following sections.
+	
+	\begin{table}[htbp]
+		\centering
+		\caption{Notations}
+		\begin{tabular}{cl}
+			\hline
+			Symbol & Description \\
+			\hline
+			\hline
+			SDOE & Space Debris Orbiting Environment \\
+			ADR & Active Debris Removal \\
+			LEO & Low Earth Orbit \\
+			MEO & Medium Earth Orbit \\
+			GEO & Geostationary Orbit \\
+			$F$ & Flux in impacts per square meter of surface area per year \\
+			$k$ & 1 for a randomly tumbling surface \\
+			$d$ & Orbital debris diameter in cm \\
+			$t$ & Time expressed in years \\
+			$h$ & Altitude in km ($h\leq$ 2000 km)\\
+			$S$ & 13-month smoothed 10.7 cm-wavelength solar flux expressed in $10^4$ Jy \\
+			$i$ & Inclination in degrees\\
+			$p$ & The assumed annual growth rate of mass in orbit\\
+			$k_2$ & Probability constant in the collision\\
+			$V$ & Volume of satellite\\
+			$P_1$ & Failure probability of ground handling\\
+			$P_2$ & Failure probability of launch\\
+			$P_3$ & Failure probability during space\\
+			$P_4$ & Failure probability of re-entry\\
+			$B$ & Benefits\\
+			$I$ & Incomes\\
+			$C$ & Costs\\
+			$T$ & Length of Operation Period in Space for Removal\\
+			\hline
+		\end{tabular}
+		\label{Tab-Notations}
+	\end{table}
+	
+\subsection{Assumptions}\label{Sec-Assumption}
+	
+	Based on \cite{flux} and \cite{White} and regarding to our model, we have the following assumptions:
+	
+	\begin{itemize}
+		\item We focus on mean values of object's sizes, masses, positions, and mean numbers o generated collision and explosion fragments. Thus, the accuracy of collision detection and individual interactions between objects are not involved in our model.
+		\item Our model uses density distribution to represent all object's positions in each altitude band, as well as the generation of collision and explosion fragments and their velocities. This varies from the real distribution.
+		\item We regard the orbits of objects as circular or near-circular, allowing objects to fit into one altitude band. The variation of atmospheric drag within one orbit is ignored.
+		\item Only a very small number of highly eccentric objects exist in LEO, and they spend only a small portion of time within LEO, they were ignored.
+		\item The accumulation of objects tracked by the U.S. Space Command, when averaged over an 11-year solar cycle, will increase at a rate of 5 percent per year.
+		\item Elements such as the right ascension of the ascending node and argument of perigee are not taken into account in this model.
+		\item The flux resulting from the U.S. Space Command orbital element sets is complete to a limiting size of 10 cm for objects detected below 1000 km altitude.
+		\item There is no political or legal challenges in the whole process of space debris removal operation.
+		\item Assuming an 1cm fragment for the medium debris and $\approx$ 3000 kg object for the large object removal~\cite{McKnight}.
+	\end{itemize}
+	
+	
+\subsection{General Assessment Model on Alternatives of Space Debris Removal in Low Earth Orbit (GAM-LEO)}
+	
+	With the goal of simplifying a complex aeronautical task but remain practical at the same time, and combining with the factors in Section~\ref{Sec-Task}, Section~\ref{Sec-ProblemSpace}, and Section~\ref{Sec-Assumption}, we come up with a \emph{General Assessment Model on Alternatives of Space Debris Removal in Low Earth Orbit (GAM-LEO)}. Figure~\ref{Fig-GAM_LEO} illustrates the working flow of the GAM-LEO model. In the following we will explain the details correspondingly.
+
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=\linewidth]{Fig-GAM-LEO.pdf}
+		\caption{Design of General Assessment Model (GAM-LEO)}
+		\label{Fig-GAM_LEO}
+	\end{figure}
+	
+	In our design, the process of determine an economically attractive opportunity in space debris removal consists of three parts:
+	
+	\begin{enumerate}
+		
+		\item \textbf{Removal methods modeling}. We collect numbers of schemes, systems and projects on space debris removal~\cite{Phipps,Pearson2010,Pardini,Visagie,Beckett} (Figure \ref{Fig-GAM_LEO}), and transfer them into quantitative/qualitative models. These models will be the input instances of GAM-LEO model, in which their feasibilities and commercial potentials are analyzed.
+		
+		\item \textbf{Assessment and estimation using GAM-LEO.} GAM-LEO is utilized to estimate and evaluate the assumed benefits of a input removal method. It is composed of four components:
+		\begin{enumerate}[i.]
+			
+			\item \textbf{Space Environment Simulation (NASA90 model).} Based on a cumulative flux equation, the model is able to simulate the distribution of orbital debris in Earth orbit below 2000 km altitude. On receiving a removal method(s), it is able to start a simulation LEO debris environment using mathematical integration. Then this environment may undergo some transformation, until a new environment is generated, which is also in a mathematical integration format. From this new environment, we are able to assess the risks of the input removal method(s).
+			
+			\item \textbf{Risk Assessment.} Risk assessment module receives a specific removal method and environment model NASA90 as inputs, then it gives a set of estimated risk for multiple phases as output. Risk assessment is a key step in the simulation because it will greatly affect the final result. if a removal method has great performance but with a low success rate, we may need to reconsider this option. In general, risk includes ground handling risk, launch risk, space risk and re-entry risk.
+			
+			\item \textbf{Cost Assessment.} Cost assessment module receives a specific removal method as input, then it gives a set of estimated cost for multiple phases as output. Our model is based on authority data published on 2009 NASA-DARPA International Conference. In general, cost includes development and manufacturing cost, launch cost and operational cost.
+			
+			\item \textbf{Income Assessment.} Income assessment module receives a specific removal method and three types of revenue flows: recycle revenue, government and company funding, and payment as inputs, then it gives a set of estimated risk for different phases as output. In general, income includes recycle revenue, funding and payment.
+			
+		\end{enumerate}
+		
+		\item \textbf{Benefits evaluation and final decision.} We calculated benefits using incomes, costs and risks as inputs, and got an estimated result as output. If the estimated value is positive then it suggests that our plan is practical, otherwise not.
+		
+	\end{enumerate}
+	
+    Algorithm~\ref{Alg-GeneralAlgorithm} describes the general process of GEO-LEO model. For each removal method, Line~\ref{Line-WhileBegin} to \ref{Line-WhileEnd} calculates the corresponding risks, costs, incomes, and benefits, and then determines whether we have a positive benefits.
+
+
+
+	
+        \begin{algorithm}[H]
+          \SetAlgoLined
+          \LinesNumbered
+          \caption{General Algorithm}  \label{Alg-GeneralAlgorithm}
+          \KwData{A set of removal method; }
+          \KwResult{A set of Boolean values to represent whether the removal method is profitable}
+          Initialization\;
+	      \While{set is not empty}{ \label{Line-WhileBegin}
+            read current removal method\;
+            calculate risks, costs, incomes, benefits\;
+            \eIf{Benefits $\geq$ 0}{
+              yield true \tcp*[r]{\color{blue}the removal method has benefits}
+              }{
+              yield false;
+              }
+          } \label{Line-WhileEnd}
+          \Return Benefits\;
+        \end{algorithm}
+
+\subsubsection{Space Environment Simulation (NASA90)}
+	
+	NASA90 is a model proposed by NASA in 1990s (Figure~\ref{Fig-Flux}). It provides a simple and very fast debris flux calculation for orbital altitudes below 2000 km, but it does not take into account the existence of a large number of particles on eccentric orbits. Since this model has been the first more or less detailed description of the debris environment, it can not be really considered up to date. In spite that, it remains one of the most valid options for preliminary analyses and impact probability estimations~\cite{Andrenucci}.
+
+The orbital debris environment described in this model represents a compromise between existing data to measure the environment, modeling of this data to predict the future environment, the uncertainty in both measurements and modeling, and the need to describe the environment so that various options concerning spacecraft design and operations can be easily evaluated~\cite{flux}.
+
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Fig-flux.jpg}
+		\caption{Flux Model in NASA90}
+		\label{Fig-Flux}
+	\end{figure}
+
+    Now let us consider the cumulative flux according to Space Environment Simulation (NASA90).
+
+	The cumulative flux $F(\cdots)$ of orbital debris of size $d$ and larger on spacecraft orbiting at altitude $h$, inclination $i$, in the year $t$, when the solar activity for the previous year is $S$, is given by Equation~\eqref{Eqn-Flux}:
+	
+	\begin{equation}\label{Eqn-Flux}
+	F(d,h,i,t,S) = k \cdot \Phi(h, S) \cdot \Psi(i) \cdot [ F_1(d) \cdot g_1(t) + F_2(d) \cdot g_2(t) ]
+	\end{equation}
+	
+	where
+	\begin{eqnarray*}\label{EqnArr-Flux}
+	\Phi(h,S) & = & \frac{\Phi_1(h,S)}{\Phi_1(h, S)+1} \\
+	\Phi_1(h, S) & = & 10^{(\frac{h}{200}-\frac{S}{140}-1.5)} \\
+	F_1(d) & = & 1.05 \times 10^{-5} \cdot d^{-2.5} \\
+	F_2(d) & = & 7.0 \times 10^{10} \cdot (d + 700)^{-6} \\
+	g_1(t) & = & (1 + 2 \cdot p)^{(t-1985)} \\
+	g_1(t) & = & (1 + p)^{(t-1985)}
+	\end{eqnarray*}
+
+	Here $p$ is the assumed annual growth rate of mass in orbit.  %The meanings of symbols are included in Table~\ref{Tab-Notations}.
+
+
+
+	The inclination-dependent function $\Psi$ is a ratio of the flux on a spacecraft in an orbit of inclination $i$ to that flux incident on a spacecraft in the current population's average inclination of approximately 60. Values for $\Psi$ are given in Appendix~\ref{Sec-Appendix1}. An average 11-year solar cycle has values of $S$ which range from 70 at solar minimum to 150 at solar maximum~\cite{flux}.
+	
+	More specifically, in our context of problem, the model is modified (characteristics like uncertainty in debris flux, average mass density, and velocity and direction distribution are removed) to suit our objectives. What we are concerning is its evaluation result of the mission failure risk when the spacecraft or satellite is removing space debris.
+	
+\subsubsection{Risk Assessment}\label{Sec-Risk}
+	
+	Though the concept of debris removal is attractive, there's no reliable removal method that always succeeds. Here we need to discuss the potential risk of removal failure. Take tethers as example, they are usually very long and thin, providing increased opportunities for something to go wrong. The accidental tether severing may be due to a number of causes including manufacturing defects, system malfunctions, material degradation, vibrations, and contact with other spacecraft elements. Most of these causes can be prevented through design, quality check and active control of the tether dynamics and stability during the mission~\cite{Pardini}.
+	
+	For different types of removal methods, the risk pattern is different. Some of the most critical phases to focus on, for the definition of hazards and risks of the de-orbiting method, are one or combination of following items. Each of these phases presents its own issues and these have to be carefully faced to avoid any harm or injury and to have the highest probabilities of success for the mission~\cite{Andrenucci}. We need them to estimate the possible failures of removal methods.
+	
+	\begin{itemize}
+		\item Ground handling Risk: many operations will be operated on the ground and there's no guarantee they would be perfectly done.
+		\item Launch Risk: launching a satellite would be a necessary step to perform for most of removal methods. But it's risky too.
+		\item Space Risk: satellite or tethers might smash together with debris, thus fail to perform its missions. See Equation \eqref{Eqn-P3} and \eqref{Eqn-P3_2}.
+		\item Re-entry Risk: To "collect" instead of "removal" debris, the collector will need to bring the collected material back to ground. This step contains extreme dangers, too.
+	\end{itemize}
+	
+	\begin{equation}\label{Eqn-P3}
+	d P_3(T) = k_2 \cdot F \cdot (V)^{(\frac{2}{3})} \cdot d T
+	\end{equation}
+	
+	\begin{equation}\label{Eqn-P3_2}
+	P_3 = \int_{0}^{T}	d P_3(T)
+	\end{equation}		
+	
+	The detailed corresponding relationships between risk type and removal methods would be described in the next section.
+	
+\subsubsection{Cost Assessment}\label{Sec-Cost}
+	The cost associated with the implementation of the package of mitigation measures should be minimized for future space missions \cite{Walker}.To assess the cost of orbital debris removal, we're mainly interested in two questions~\cite{Braun}:
+	\begin{itemize}
+		\item How many USD does the removal of 1 kg of debris cost?
+		\item How does that value change for different scenarios and technologies?
+	\end{itemize}
+	
+	We used the authority data published on 2009 NASA-DARPA International Conference to answer these two questions \cite{McKnight}. For various removal method, we adapted the corresponding cost estimation due to the speciality of each removal method. It's impossible to 100\% simulate all the common methods exactly as the practical situations. What we try to do is to make our estimation as reliable as we could.
+	
+	In general, cost could be divided into the following parts \cite{Braun}:
+	\begin{itemize}
+		\item Development and manufacturing cost
+		\item Launch cost
+		\item Operational cost
+	\end{itemize}
+	
+	Due to the limits of paper length, we will omit the intermediate steps and give out the overall estimation in the end. Simply we use the comprehensive equation \eqref{Eqn-Cost} to :
+	\begin{equation}\label{Eqn-Cost}
+	Total Cost = Weight * Unit Cost
+	\end{equation}
+	
+\subsubsection{Incomes Assessment}
+	In general, incomes could be divided into the following parts:
+	\paragraph{Recycle}
+	The materials recycled from space have great economic values. After chemical and physical possessing,  they could be reused to build new satellites components, or extract special metals. We use Equation~\eqref{Eqn-Recycle} to estimate the recycle value.
+	
+	\begin{equation}\label{Eqn-Recycle}
+	Total Value = Weight \times Unit Value
+	\end{equation}
+	
+	\paragraph{Funding}
+	The debris project needs a big deal of startup money so it's not possible without support from governments.
+	Except for that, we want civil economic power to corporate together too. There are a lot of US corporations that make profits overseas and don't repatriate them due to the high US corporate tax rate. In some cases these are profits that legitimately came from servicing overseas customers with overseas service centers and factories, and in some cases it looks more like clever tax avoidance schemes. While the sane thing to do would be lower our corporate tax rate to be more in line with the rest of the developed world, that's an idea that's been talked about for a long time without any action. What if the government agreed to a mechanism for allowing companies to repatriate foreign profits at a discounted corporate tax rate in exchange for donations to a fund for debris cleanup prizes/bounties for US-launched space junk? The donation money provides a mechanism for filling the coffers on a bounty system for de-orbiting launched space debris (something like 1/4 of the junk up there) that would not be tied to the normal appropriation process, since the donation money goes into the fund before any money enters the tax system. In this way we could also get fundings from companies \cite{Oliver}.
+	
+	\paragraph{Payment}
+	Since the orbital debris environment is associated with every country that has wills to launch new satellites into space, all of them should be responsible to the space environment. Our plan is to be authorized to all members of the "space alliance" and they pay us to maintain the debris free environment each time they set up a new satellites.
+	
+\subsection{Benefits Assessment}
+	The benefits of our program is simple to calculate (incomes minus costs). Note that we might need to operate more than once due to the failure probabilities. We use Equation~\eqref{Eqn-Benefits} to estimate the recycle value.
+	\begin{equation}\label{Eqn-Benefits}
+	B = I - \frac{C}{(1-P_1)(1-P_2)(1-P_3)(1-P_4)}
+	\end{equation}
+	
+\subsection{Profit Determination}
+	It's simple to determine whether our removal operation is sustainable or not. If the estimated number of benefits are positive, this means the removal plan is realistic and promising. Otherwise it would be impossible to keep doing this in the long term. After all, as a commercial company, making profits is definitely our first priority.
+	
+	
+\section{Space Debris Removal Schemes \& Methods} \label{Sec-RemovelScheme}
+	
+\subsection{Schemes for Space Debris Removal}\label{Sec-Schemes}
+	
+	To successfully reduce the collision risk due to space debris in LEO, first we should determine what priority different kinds of space debris have, since the distribution and size of space debris vary a lot. On observation of the space debris objects, the very largest objects (derelict payloads and rocket bodies) may collide with and terminate missions of operational systems when involved in a collision and the collision in turn will create tens of thousands of lethal fragments. It is these lethal fragments that will eventually be the hazard driving the need for active debris removal even though they may not be the most critical, or advantageous, to remove first~\cite{McKnight}. On the other hand, collisions between trackable objects are occurring with sufficient frequency such that these events are the main driver for future debris growth across all size ranges, so a comprehensive removal operation seems necessary.
+	
+	We propose three scenarios, in which annual debris removal rate are 5, 10, and 20 objects, respectively~\cite{Liou}. With assumptions in Section~\ref{Sec-Assumption}, we also make a estimation that since a large debris object has a mass of 3000 kg and the size proportion between large object and small object is 1000 times (($10 cm\times10 cm\times10 cm)/(1 cm\times1 cm\times1 cm)$).
+	
+	Based on these analysis, we put up with two schemes for space debris removal: Priority for Large Space Debris (PLSD) and Plan for Comprehensive Removal (PCR).
+	
+	\begin{itemize}
+		\item \textbf{Priority for Large Space Debris (PLSD)}: Remove 10 large debris objects each year, with a total mass of 30000 kg.
+		\item \textbf{Plan for Comprehensive Removal (PCR)}: Remove 5 large debris objects each year, with a total mass of 15000 kg. Plus, remove 5000 small debris objects each year, with a total mass of 15000 kg.
+	\end{itemize}
+	
+	With thess two schemes in hand, we employ several removal methods, then construct mathematical models for them in Section~\ref{Sec-RemovalMethods}.
+	
+	\subsection{Removal Methods}\label{Sec-RemovalMethods}
+	
+	Aiming to remove various space debris objects with different sizes in LEO environment, there are corresponding removal methods developped to address the problem. In this section we discuss more about the qualitative factors for each removal methods.
+	
+	\subsubsection{Method I: Ground-based Laser}
+	
+	Orbital debris in low Earth orbit (LEO) are now sufficiently dense that the use of LEO space is threatened by runaway collisional cascading. A problem predicted more than thirty years ago, the threat from debris larger than about 1cm demands serious attention. A promising proposed solution uses a high power pulsed laser system on the Earth to make plasma jets on the objects, slowing them slightly, and causing them to re-enter and burn up in the atmosphere~\cite{Phipps}. For example, in Figure~\ref{Fig-Laser}, a focused, 1.06 $\mu m$, 5 ns repetitively-pulsed laser beam makes a jet on the object so oriented as to lower its perigee and cause it to re-enter the atmosphere.
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.8\linewidth]{Fig-laser.jpg}
+		\caption{Artist's concept of laser orbital debris removal~\cite{Phipps}}
+		\label{Fig-Laser}
+	\end{figure}
+	
+	\paragraph{Feasibility \& Challenge}
+	
+	Removal rate using laser is very uncertain at this time but could take 5-10 years to remove any significant number of objects; but it is more effective for mm size debris~\cite{McKnight}. Since it is installed on the ground, potential risks may arise in ground handling and re-entry behavior mentioned in Section~\ref{Sec-Risk}. Since it is a ground-based technique, the maintenance may require less than spatial techniques, but energy lose significantly by the atmospheric absorption, and it could not be move freely in a huge range.
+	
+	\paragraph{Cost Analysis}
+	
+	After relevant research, it requires \$300M for the installation of one site. So it costs \$1k per cm-size object if removing 300000 objects and \$15k per cm-size debris for removing 20,000 objects~\cite{McKnight}.
+	
+	
+	\subsubsection{Method II: Collection Media Sweeping Out Volume in space (CMSOV)}
+	
+	To remove objects in the 5mm-10cm size range, large orbiting ``collection media" is another option besides ground-based lasers. This ``collection media" may be low-density capture material, rotating panels that absorb the momentum of incoming particles, or any of several approaches to physically remove small debris from orbit~\cite{McKnight}. For example, the ElectroDynamic Debris Eliminator (EDDE) (Figure~\ref{Fig-Edde}) is a low-cost solution for LEO space debris removal. EDDE can affordably remove nearly all the 2465 objects of more than 2 kg that are now in 500-2000 km orbits. That is more than 99\% of the total mass, collision area, and debris-generation potential in LEO~\cite{Pearson2010}. A dozen EDDE vehicles can remove all large debris from LEO in less than 7 years~\cite{Pearson}.
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.3\linewidth]{Fig-EDDE.jpg}
+		\caption{The principle of operation of an EDDE vehicle~\cite{Pearson2010}}
+		\label{Fig-Edde}
+	\end{figure}
+	
+	\paragraph{Feasibility \& Challenge}
+	
+	The physical efficacy of this approach is questionable, because the collector itself may confront with collision accident with space debris. Additionally, the equipment operates in LEO environment, which requires high stability of communication between space and ground and real-time controlling. Potential risks for this option are mainly in ground handling, launch, space, re-entry behavior mentioned in Section~\ref{Sec-Risk}.
+	
+	\paragraph{Cost Analysis}
+	
+	The cost for 1-10cm LEO debris is \$20k/object for 5-year mission based on a \$100M	mission for a 100 $km^2$ collector (for capture device)~\cite{McKnight}.
+	
+	
+	\subsubsection{Method III: Electrodynamic Tether}
+	
+	By using electrodynamic drag to greatly increase the orbital decay rate, an electrodynamic space tether can remove spent or dysfunctional spacecraft from low Earth orbit rapidly and safely. Moreover, the low mass requirements of such tether devices make them highly advantageous compared to conventional rocket-based de-orbit systems~\cite{Pardini}.
+	
+	\paragraph{Feasibility \& Challenge}
+	
+	A tether system is much more vulnerable to space debris impacts than a typical spacecraft and its design must prove to be safe to a certain confidence level before being adopted for potential applications. They present a much greater risk to operating satellites due to their considerably large collision cross-sectional area. Because of their small diameter, tethers of normal design may have a high probability of being severed by impacts with relatively small meteoroids and orbital debris. The resulting tether fragments may pose additional risks to operating spacecraft~\cite{Pardini}. Potential risks for this option are mainly in ground handling, launch, space, re-entry behavior mentioned in Section~\ref{Sec-Risk}.
+	
+	\paragraph{Cost Analysis}
+	
+	The cost for single mission is \$100M, but the e-tether has the potential to execute multiple missions without other propulsive capabilities may reasonably approach \$10M/object~\cite{McKnight}.
+	
+	\subsubsection{Method IV: Inflatables}
+	
+	Inflatable structures made of commercially available films are lightweight, tightly packed, and occupy a very small volume when stowed. Thus, they can be launched along with a SV, without affecting normal operations. In general, they are about ten times less expensive to produce than mechanical deployable structures, are more reliable, and can be accommodated in smaller spacecraft and launch vehicles. The de-orbit mission begins with launch operations. After successful launch, the demonstration satellite separates from the upper stage and stabilizes to the flight orientation (Figure~\ref{Fig-Inflatable})~\cite{Beckett}.
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Fig-inflatable.jpg}
+		\caption{Mission Profile of Inflatable Devices~\cite{Beckett}}
+		\label{Fig-Inflatable}
+	\end{figure}
+	
+	\paragraph{Feasibility \& Challenge}
+	
+	There are extended storage requirements--Materials tend to degrade after years in orbit due to the extreme space environment (thermal cycling, vacuum, atomic oxygen, etc.) On-orbit lifetime issues of the materials and the inflatable devices must be addressed. Moreover, aerodynamic stability is essential to maintaining proper orientation in a low drag environment. Hypersonic shock interactions and the associated instability will be major issues affecting the performance of the inflatable system~\cite{Beckett}. Potential risks for this option are mainly in ground handling, launch, space, re-entry behavior mentioned in Section~\ref{Sec-Risk}.
+	
+	\paragraph{Cost Analysis}
+	
+	The cost for each space debrital object is \$100M if doing them one at a time but with some autonomous vehicle it would be less per object~\cite{McKnight}.
+	
+	\subsubsection{Method V: Solar Sail}
+	
+	Solar sail is a concept that combines a large deployable reflective sail with embedded tethers and
+	docking capability to yield a satellite that can be used to de-orbit debris pieces using a combination
+	of aerodynamic drag, solar radiation pressure and electrostatic braking. In drag-sail mode the deployed membranes will be used to increase the area of the spacecraft that will interact with the atmospheric particles, causing an increased drag and a faster de-orbiting. The size of the sail required to successfully de-orbit a satellite will depend on the mass of the spacecraft and its initial orbit~\cite{Visagie}.
+	
+	\paragraph{Feasibility \& Challenge}
+	
+	Since the sail will have pyramidal shape, passive attitude control can be utilized. This way it
+	becomes much more reliable and power/working electronics will not be required for the longest
+	part of the sails operational life~\cite{Visagie}. Potential risks for this option are mainly in ground handling, launch, space, re-entry behavior mentioned in Section~\ref{Sec-Risk}.
+	
+	
+	\paragraph{Cost Analysis}
+	
+	The sail can drift into neighboring slots, which brings a risk of colliding with other active
+	satellites. device propose that it could use 2000 $m^2$ sails for $\approx$ \$1M each to move objects out of GEO but does not include launch costs~\cite{McKnight}.
+	
+	
+	\subsubsection{Combination of Removal Methods}
+	
+	As we conclude, Method I and Method II primarily emphasize on small space debris removal, while Method III, Method IV and Method V focus on large debris removal. Thus, to make the effect of space debris removal sufficient to reduce the total amount of space debris, we propose three approaches to implement these removal methods, with schemes in Section~\ref{Sec-Schemes} (Table~\ref{Tab-Combination}).
+	
+		\begin{table}[htbp]
+			\centering
+			\caption{Combination of Removal Methods}
+			\begin{tabular}{c|cl}
+				\hline
+				\hline
+				Approach No. & Methods & Schemes \\
+				\hline
+				\multirow{5}{*}{1} & II & PLSD, PCR\\
+				 & III & PLSD\\
+				 & IV & PLSD\\
+				 & V & PLSD\\
+				 \hline
+				 \multirow{6}{*}{2} & I, III & PCR\\
+				 &I, IV&PCR\\
+				 &I, V&PCR\\
+				 &II, III&PCR\\
+				 &II, IV&PCR\\
+				&II, V&PCR\\
+				\hline
+				3& I, II& PCR\\
+				\hline
+			\end{tabular}
+			\label{Tab-Combination}
+		\end{table}
+	
+	We will discuss the mathematical analysis and qualitative assessment of these combinations of removal methods in Section~\ref{Sec-Comparison}.
+	
+	\section{Removal Result Comparison \& Recommendation} \label{Sec-Comparison}
+	
+	As suggested in the previous sections, here we used our model to test the two schemes for orbital debris removal.
+	
+	\subsection{Constant Setting}
+	In Table~\ref{Tab-Constant1} and Table~\ref{Tab-Constant2}, based on the data we get from~\cite{McKnight}, we have listed constants we set for all removal methods.
+	\begin{table}[htbp]
+		\centering
+		\caption{Constants for Various Removal Method (1)} \label{Tab-Constant1}
+		\begin{tabular}{cccc}
+			\hline
+			Removal Method &  Recycle Revenue & $V$ & $T$ \\
+			\hline
+			\hline
+			Ground-based Laser &0 &0&0\\
+			CMSOV 		        &150000 &64&10/365\\
+			Electrodynamic Tether & 150000 &8&50/365\\
+			Inflatables 	        & 0&64&20/365\\
+			Solar Sail 	                & 0&64&15/365\\
+			\hline
+			\vspace{0.5pt}
+		\end{tabular}
+    \end{table}
+
+    \begin{table}[htbp]
+        \centering
+		\caption{Constants for Various Removal Method (2)} \label{Tab-Constant2}
+    	\begin{tabular}{cccccccccccccc}
+			\hline
+			Removal Method &  $P_1$ &$P_2$ &$P_4$ &Cost\\
+			\hline
+			\hline
+			Ground-based Laser &0.01&0&0.1 & 300M/site\\
+			CMSOV 		        &0.0005&0.0005&0.1 & 20k/object, 100M/mission\\
+			Electrodynamic Tether &0.0005&0.0005&0.02 &10M/object\\
+			Inflatables 	        &0.0005&0.0005&0.05&100M/object\\
+			Solar Sail 	            &0.0005&0.0005&0.01&100M/object\\
+			\hline
+		\end{tabular}
+	\end{table}	
+	\subsection{Result}	
+	Here to clarify, we've simulated for all possible scenarios. There are two modes of removal, single removal method and combined removal methods.
+	
+	For single removal methods, all methods are included except for Ground-based Laser because it can not deal with big debris. We have CMSOV for PLSD and PCR,  Electrodynamic Tether, Inflatables, and Solar Sail only for PLSD because they cannot deal with tiny debris. The result is listed in Table \ref{Tab-ResultSingle}:
+	
+	\begin{table}[htbp]
+		\centering
+		\caption{Simulation Result for Single Removal Method}
+		\begin{tabular}{cccccc}
+			\hline
+			Removal Method &  Benefit (PLSD) & Benefit (PCR) \\
+			\hline
+			\hline
+			CMSOV 		        & $1.10149*10^9$ &$1.16637*10^9$\\
+			Electrodynamic Tether & $1.07478*10^9$   &-\\
+			Inflatables 	        & $2.7519*10^8$   &-\\
+			Solar Sail 	                & $1.9778*10^8$   &-\\
+			\hline
+		\end{tabular}
+		\label{Tab-ResultSingle}
+	\end{table}
+	
+	For combined removal methods, we only test on PCR because it has heterogeneous debris to deal with. All the combinations and the results are listed in Table \ref{Tab-ResultCombined}:
+	
+	
+	\begin{table}[htbp]
+		\centering
+		\caption{Simulation Result for Combined Removal Method on PCR}
+		\begin{tabular}{c|ccccc}
+			\hline
+			&  Ground-based Laser & CMSOV \\
+			\hline
+			\hline
+			Electrodynamic Tether & $1.1058*10^9$ & $1.30888*10^9$\\
+			Inflatables 	        &$4.8477*10^8$ &$7.53968*10^8$\\
+			Solar Sail 	                & $5.1219*10^8$&$7.15264*10^8$\\
+			CMSOV		        & $1.05208*10^9$ &-\\
+			\hline
+		\end{tabular}
+		\label{Tab-ResultCombined}
+	\end{table}
+	
+	
+	
+	\subsection{Comparison \& Recommendation}
+	
+	Now we can make a comparison for all scenarios we assumed. From fig \ref{Fig-Compa1} and \ref{Fig-Compa2} we could draw a conclusion that the combination of "CMSOV" and "Electrodynamic Tether" matches the best. The reason is simple: "CMSOV" could sweep large number of small debris at a low cost, while "Electrodynamic Tether" is the cheapest solution to deal with large debris.
+	
+	In short, we recommend using "CMSOV" and "Electrodynamic Tether" as the solution to our removal problem. In our situation, it can optimally perform the orbital debris removal task, at the same time remain at a high profitable level.
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=\linewidth]{Fig-pic1.jpg}
+		\caption{Comparison between benefits of single removal methods}
+		\label{Fig-Compa1}
+	\end{figure}
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=\linewidth]{Fig-pic2.jpg}
+		\caption{Comparison between benefits of combined removal methods}
+		\label{Fig-Compa2}
+	\end{figure}
+	
+	\subsection{What if?}
+	Further more, there are a few special scenarios worth discussing.
+	
+	\paragraph{what if we need to discuss a new removal method?}
+	Our model is extensible so you can freely set up relative constants in our model and do the simulation. In our examples there are removal methods varying from cost calculations and risk estimations. All of them can be simulated.
+	
+	\paragraph{What if the debris environment is so harsh that no new satellites could be launched?}
+	Our model supports that situation too. This is totally possible since debris smash with each other every day and new ones get generated. In this way we could only use laser to remove small ones, but for big ones there's nothing we could do.
+
+	\paragraph{What if we adapt a more flexible scheme?}
+	Of course you could do that. The simulation is just like what we did, you could modify the combination way as you like.
+	
+\section{Model Evaluation \& Sensitivity Analysis} \label{Sec-Sensitivity}
+	
+\subsection{Sensitivity Analysis}
+	
+\subsubsection{Flux}
+	Most parts of the model GAM-LEO have been described in the above, while we may still want to know more about the expected reaction of system towards parameter variety. Is it sensitive? Will it react fiercely towards constant changes? We want to make sure the system is robust and realistic.
+	
+	We calculated the value of flux from 2016 to 2036, and we adapted CMSOV as our test removal method. From fig \ref{Fig-SenFlux}, we can see that the benefit is keeping going down at a steady speed, which suggests our model is sensitive to flux changes.
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=\linewidth]{Fig-sen_flux.jpg}
+		\caption{The impact of flux on benefit}
+		\label{Fig-SenFlux}
+	\end{figure}
+	
+	\subsubsection{Recycle Percentile}
+	In the previous sections we show that recycle revenue is a part of the total benefit. But according to the result we got before, it seems there are several orders of magnitude. We did a simple calculation to see the weight of recycle revenue in the total benefit (See Table~\ref{Tab-Recycle}).
+	
+	\begin{table}[htbp]
+		\centering
+		\caption{Recycle Revenue Percentile in Benefit}
+		\begin{tabular}{cccccc}
+			\hline
+			Removal Method &  Percentile  \\
+			\hline
+			\hline
+			CMSOV(PLSD) 		        & $0.000136179$\\
+			CMSOV(PCR) 		        & $0.000128604$\\
+			Electrodynamic Tether & $0.000140187$ \\
+			Inflatables 	        & $0.000545455$  \\
+			Solar Sail 	                & $0.000758418$  \\
+			\hline
+		\end{tabular}
+		\label{Tab-Recycle}
+	\end{table}
+	
+	We can see that the recycle revenue only takes a very little part of it.
+
+	\subsection{Strengths and Weaknesses}
+	
+	
+		\subsubsection{Strengths}
+		
+		The model GAM-LEO effectively assesses the profits of independent alternative or combination of alternatives and explore a variety of important “What if?” scenarios. Space environment model NASA90 is adopted for further removal methods assessment and risk evaluation. Three important factors, including costs, incomes and risks are taken quantitative and qualitative estimates. Benefits are used as standard to determine whether an economically attractive opportunity exists. In the model GAM-LEO, the incomes part includes all the three possible ways, recycle, funding and payment. The risks part is consist of ground handling risk, launch risk, space risk and re-entry risk. The risks part, costs part and the recycle in the incomes part all depend on specific alternative. The model GAM-LEO offers an all-sided assessment of alternatives in detail.
+		
+		The model GAM-LEO receives seven parameters from each removal method. It not only simplifies the description of the removal method, but also retains all the critical parts of the alternative.
+		
+		The time-dependent model GAM-LEO could predict the profits of removal methods in the future. It clearly shows the trend of costs with different alternatives in the simulation.
+		
+		The output of this model GAM-LEO is profits. Therefore, it is obvious to determine the best alternative for commercial use and whether the alternative is an economically opportunity.
+		
+		The model could be practically implemented in the assessment of removal methods. By varying the initial parameters based on the specific case, the profit could be determined.
+		
+		\subsubsection{Weaknesses}
+		
+		The model relies on many assumptions. In order to make the model more practical, more assumptions need to be removed and more factors should be incorporated into the model.
+		
+		More factors, except costs, risks and incomes, could be considered in an assessment model and proved the sensitivity.
+		
+		Most removal methods have not been applied. Therefore, there is no real data to support the risk probability of these methods. To solve this problem, we estimate the probability by using other factors.
+		
+		Due to the limit of time, we do not evaluate all the removal methods. We only recommend the alternative with best performance in our test.
+		
+		The model GAM-LEO only fits in LEO and does not assess the performance of removal methods in GEO.
+		
+		The model considers technical and economical factors, but does not incorporate political and legal issues.
+
+
+	
+	
+\section{Conclusion} \label{Sec-Conclusion}
+	In our assessment, the combination of CMSOV and Electrodynamic Tether has the best performance. CMSOV is used to sweep small objects and Electrodynamic Tether is used to remove large debris. Our model GAM-LEO incorporates three important factors, costs, incomes and risks to assess each removal methods or combinations of alternatives. The output of our model is benefits that are the most critical standard to evaluate an economically opportunity. The quantitative estimates effectively determine the best combination of alternatives.
+	
+	In those alternatives, Solar Sail has the worst performance. CMSOV and Electrodynamic Tether can get much higher benefits than Solar Sail and Inflatables. In the combinations, the combination of Inflatables and Ground-based Laser earns the lowest benefits. The combination of CMSOV and Electrodynamic gives the best result and achieves a better performance than any other alternative and combinations of alternatives.
+	
+	From the analysis, we can find that funding contributes a lot to incomes. Besides, the recycle income has little influence on the incomes, since there is a large gap between recycle price and removal cost.
+	
+	According to the trend of changes in flux, the flux contributes a lot to risks. Therefore, the benefits will increase sharply with the decrease of flux. With the improvement of space environment, the firm will get more benefits from removal work in the future if it seizes this economically attractive opportunity.
+	
+	In order to earn more benefits, a private firm has two methods. The firm could improve technology to decrease the cost. It could also receive more fundings and get more payment to increase incomes. These factors contribute more to the benefits than other factors.
+
+
+	\bibliographystyle{IEEEtran}
+	\bibliography{newrefs}
+	
+\newpage
+\section*{Executive Summary}
+	
+\noindent To whom it may concern,
+	
+	There are currently hundreds of millions of space debris fragments orbiting	the Earth at speeds of up to several kilometers per second. Although the	majority of these fragments result from the space activities of only three countries---China, Russia, and the United States---the indiscriminate nature of orbital mechanics means that they pose a continuous threat to all assets in Earth`s orbit. There are now roughly 300,000 pieces of space	debris large enough to completely destroy operating satellites upon impact.
+	
+	Concerning the serious space debris situation, we come up with a mathematical model to assess the commercial potentials among various space debris removal methods---Ground-based Laser, CMSOV, Electrodynamic Tether, Inflatables and Solar Sail, as well as combinations of these five methods.
+	
+	Regarding to the complexity of this problem, we also simplify some aspects like  to make sure that accuracy and reliability of our model is still guaranteed.
+	
+	According to our test, we recommend the combination of CMSOV and Electrodynamics. This combination has the lowest cost and highest benefits. CMSOV could be adopted to remove small objects. Electrodynamic Tether should be used to sweep large debris.
+	
+	In those alternatives that we consider, Solar Sail has the worst performance. CMSOV and Electrodynamic Tether can get much higher benefits than Solar Sail and Inflatables. In the combinations, the combination of Inflatables and Ground-based Laser earns the lowest benefits. The combination of CMSOV and Electrodynamic gives the best result and achieves a better performance than any other alternative and combinations of alternatives.
+
+	Space  is the collection of defunct man-made objects in space - old satellites, spent rocket stages, and fragments from disintegration, erosion, and collisions - including those caused by debris itself.
+	
+	As of March 2012, there are over 100 million pieces of debris smaller than 1 cm (0.39 in). From one to ten cm at ~500,000, large  (10 cm across or larger) at 21,000. As of 2009, 19,000 debris over 5 cm (2 in) are tracked. Below 2000 km debris are denser than meteoroids; mostly dust from solid rocket motors, surface erosion debris like paint flakes, and frozen coolant from RORSAT nuclear-powered satellites. They cause damage akin to sandblasting, especially to solar panels and optics like telescopes or star trackers that can not be covered with a ballistic Whipple shield (unless it is transparent).
+	
+	This affects useful polar-orbiting bands, increases the cost of protection for missions and destroys live satellites. Whether it is already underway is debated.
+	
+	Recent analyses have clearly shown that the orbital debris population will continue to grow even without future satellite launches. However, even if the cataloged and ``lethal'' populations both continue to grow at only a linear rate, consistent with history, the hazard will be a concern within the next 2-4 decades.
+	
+	The very largest objects (derelict payloads and rocket bodies) may collide with and terminate missions of
+	operational systems when involved in a collision and the collision in turn will create tens of thousands of lethal
+	fragments. It is these lethal fragments that will eventually be the hazard driving the need for active debris removal
+	even though they may not be the most critical, or advantageous, to remove first.
+	
+	Therefore, we human-beings should take actions now.
+	
+	Fundings from governments are the most crucial support to active space debris removal. Other incomes, such as the recycle income, have little influence on the incomes, since there is a large gap between recycle price and removal cost. Hence, governments take a great responsibility to support this meaningful plan, active space debris removal.
+	
+	There is a good news. According to our analysis, the flux contributes a lot to risks. Therefore, the benefits will increase sharply with the decrease of flux. With the improvement of space environment, the plan will get more benefits from removal work in the future.
+	
+	To conclude, active space debris removal is meaningful and hopeful. Support from governments will significantly enhance the removal work. We sincerely hope that the studies of us will be helpful for you.
+	
+	Best regards,
+	Team \#47676
+	
+	\newpage
+	
+	\begin{appendices}
+		
+		\section{The Flux Enhancement Factor $\Psi(i)$}\label{Sec-Appendix1}
+		
+		Shown in Table~\ref{Tab-ForPsi}.
+		
+		\begin{table}[htbp]
+			\centering
+			\caption{The Flux Enhancement Factor $\Psi(i)$~\cite{flux}}
+			\begin{tabular}{cccccc}
+				\hline
+				Inclination & \multirow{2}{*}{$\Psi(i)$} & Inclination & \multirow{2}{*}{$\Psi(i)$} & Inclination & \multirow{2}{*}{$\Psi(i)$} \\
+				(degrees) &  & (degrees) &  & (degrees) &  \\
+				\hline
+				\hline
+				25 & 0.900 & 58 & 1.075 & 92 & 1.400 \\
+				26 & 0.905 & 59 & 1.080 & 93 & 1.440 \\
+				27 & 0.910 & 60 & 1.090 & 94 & 1.500 \\
+				28 & 0.912 & 61 & 1.100 & 95 & 1.550 \\
+				28.5 & 0.9135 & 62 & 1.115 & 96 & 1.640 \\
+				29 & 0.915 & 63 & 1.130 & 97 & 1.700 \\
+				30 & 0.920 & 64 & 1.140 & 98 & 1.750 \\
+				31 & 0.922 & 65 & 1.160 & 99 & 1.770 \\
+				32 & 0.927 & 66 & 1.180 & 100 & 1.780 \\
+				33 & 0.930 & 67 & 1.200 & 101 & 1.770 \\
+				34 & 0.935 & 68 & 1.220 & 102 & 1.750 \\
+				35 & 0.940 & 69 & 1.240 & 103 & 1.720 \\
+				36 & 0.945 & 70 & 1.260 & 104 & 1.690 \\
+				37 & 0.950 & 71 & 1.290 & 105 & 1.660 \\
+				38 & 0.952 & 72 & 1.310 & 106 & 1.610 \\
+				39 & 0.957 & 73 & 1.340 & 107 & 1.560 \\
+				40 & 0.960 & 74 & 1.380 & 108 & 1.510 \\
+				41 & 0.967 & 75 & 1.410 & 109 & 1.460 \\
+				42 & 0.972 & 76 & 1.500 & 110 & 1.410 \\
+				43 & 0.977 & 77 & 1.630 & 111 & 1.380 \\
+				44 & 0.982 & 78 & 1.680 & 112 & 1.350 \\
+				45 & 0.990 & 79 & 1.700 & 113 & 1.320 \\
+				46 & 0.995 & 80 & 1.710 & 114 & 1.300 \\
+				47 & 1.000 & 81 & 1.700 & 115 & 1.280 \\
+				48 & 1.005 & 82 & 1.680 & 116 & 1.260 \\
+				49 & 1.010 & 83 & 1.610 & 117 & 1.240 \\
+				50 & 1.020 & 84 & 1.530 & 118 & 1.220 \\
+				51 & 1.025 & 85 & 1.490 & 119 & 1.200 \\
+				52 & 1.030 & 86 & 1.450 & 120 & 1.180 \\
+				53 & 1.040 & 87 & 1.410 & 121 & 1.165 \\
+				54 & 1.045 & 88 & 1.390 & 122 & 1.155 \\
+				55 & 1.050 & 89 & 1.380 & 123 & 1.140 \\
+				56 & 1.060 & 90 & 1.370 & 124 & 1.125 \\
+				57 & 1.065 & 91 & 1.380 & 125 & 1.110 \\
+				\hline
+			\end{tabular}
+			\label{Tab-ForPsi}
+		\end{table}
+		%Here are simulation programmes we used in our model as follow.\\
+		
+		%\textbf{\textcolor[rgb]{0.98,0.00,0.00}{Input matlab source:}}
+		%\lstinputlisting[language=Matlab]{./code/mcmthesis-matlab1.m}
+		
+		\section{Simulation Code}
+		
+		
+		Our simulation codes written in \textcolor[rgb]{0.98,0.00,0.00}{\textbf{Mathematica:}}
+		\lstinputlisting[language=Mathematica]{./code/simu.nb}
+		
+	\end{appendices}
+\end{document}
+
+%%
+%% This work consists of these files mcmthesis.dtx,
+%%                                   figures/ and
+%%                                   code/,
+%% and the derived files             mcmthesis.cls,
+%%                                   mcmthesis-demo.tex,
+%%                                   README,
+%%                                   LICENSE,
+%%                                   mcmthesis.pdf and
+%%                                   mcmthesis-demo.pdf.
+%%
+%% End of file `mcmthesis-demo.tex'.
