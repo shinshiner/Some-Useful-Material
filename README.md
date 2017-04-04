@@ -1,4 +1,4 @@
 # 一些项目的Latex模板
-## ICM/MCM
+## 数学建模美赛ICM/MCM
 
 ## cvpr
